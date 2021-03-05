@@ -10,6 +10,7 @@ APawnBase::APawnBase()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// Create new components for this object
 	mCapsuleComp = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule Collider"));
 	RootComponent = mCapsuleComp;
 
@@ -21,4 +22,35 @@ APawnBase::APawnBase()
 
 	mProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Point"));
 	mProjectileSpawnPoint->SetupAttachment(mTurretMesh);
+}
+
+void APawnBase::RotateTurret(FVector lookAtTarget) 
+{
+	// Update TurretMesh rotation to face towards the LookAtTarget passed in from Child Classes
+	
+	// Use the lookAtTarget being passed in to create the vector
+	// however only use the x and y rotation and not z since the turret doesn't need
+	// to look up or down in this case
+	FVector lLookAtTargetClean  = FVector(lookAtTarget.X, lookAtTarget.Y, mTurretMesh->GetComponentLocation().Z);
+	FVector lStartLocation = mTurretMesh->GetComponentLocation();
+
+	FRotator lTurretRotation = FVector(lLookAtTargetClean - lStartLocation).Rotation();
+	mTurretMesh->SetWorldRotation(lTurretRotation);
+}
+
+void APawnBase::Fire() 
+{
+	// Get ProjectileSpawnPoint Location && Rotation -> Spawn Projectile class at Location firing towards Rotation
+	UE_LOG(LogTemp, Warning, TEXT("Fired!"));
+}
+
+void APawnBase::HandleDestruction() 
+{
+	// Univeral Functionality
+	// Play death effects particle, sound and camera shake
+
+	// Then do child overrides
+	// PawnTurret - Inform GameMode Turret died -> Then Destroy() self.
+
+	// PawnTank - Inform GameMode Player died -> Then Hide() all components && stop movement input 
 }

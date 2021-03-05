@@ -33,6 +33,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void HandleDestruction() override;
+
 private:
 
 
@@ -48,10 +50,15 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UCameraComponent*		mCamera;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float mMoveSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float mRotateSpeed;
 
 	FVector mMoveDirection;
 	FQuat mRotationDirection;
+
+	APlayerController* mPlayerControllerRef;
 
 };
