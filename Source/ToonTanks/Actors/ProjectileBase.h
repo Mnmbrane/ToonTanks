@@ -22,6 +22,10 @@ protected:
 	virtual void BeginPlay() override;
 
 private:	
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* hitComp, AActor* otherActor, UPrimitiveComponent* otherComp, FVector normalImpulse, const FHitResult& hit);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* mProjectileMovement;
 
