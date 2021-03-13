@@ -22,7 +22,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
-	void TakeDamage(AActor* damagedActor, float Damage, const UDamageType* damageType, AController* instigatedBy, AActor* damageCauser);
+	void TakeDamage(AActor* damagedActor, float damage, const UDamageType* damageType, AController* instigatedBy, AActor* damageCauser);
 
 private:
 

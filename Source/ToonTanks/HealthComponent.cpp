@@ -2,6 +2,8 @@
 
 
 #include "HealthComponent.h"
+#include "ToonTanks/GameModes/TankGameModeBase.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent() :
@@ -21,13 +23,32 @@ void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	mHealth = mDefaultHealth;
+	mGameModeRef = Cast<ATankGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::TakeDamage);
 }
 
-void UHealthComponent::TakeDamage(AActor* damagedActor, float Damage, const UDamageType* damageType, AController* instigatedBy, AActor* damageCauser) 
+void UHealthComponent::TakeDamage(AActor* damagedActor, float damage, const UDamageType* damageType, AController* instigatedBy, AActor* damageCauser) 
 {
-	
+	if(damage == 0 || mHealth <= 0)
+	{
+		return;
+	}
+
+	// Only take away damage when health is between 0 and the mDefaultHealth
+	mHealth = FMath::Clamp(mHealth - damage, 0.0f, mDefaultHealth);
+
+	if(mHealth <= 0)
+	{
+		if(mGameModeRef  != nullptr)
+		{
+			mGameModeRef->ActorDied(GetOwner());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Pawn is still alive"));
+		}
+	}
 }
 
 
